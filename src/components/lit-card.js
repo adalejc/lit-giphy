@@ -23,9 +23,6 @@ export class LitCard extends LitElement {
         :host {
             display: flexbox;
         }
-        .card-container {
-            width: 300px;
-        }
         `;
     }
 
