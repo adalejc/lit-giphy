@@ -19,13 +19,20 @@ export class LitCard extends LitElement {
     }
 
     static get styles() {
-        return css``;
+        return css`
+        :host {
+            display: flexbox;
+        }
+        .card-container {
+            width: 300px;
+        }
+        `;
     }
 
     render() {
         return html`
             <div class="card-container">
-                <div class="card-title">${this.title}</div>
+                <!-- <div class="card-title">${this.title}</div> -->
                 <div class="card-image">
                     <img src="${this.img}" alt="${this.title}" width="100%">
                 </div>

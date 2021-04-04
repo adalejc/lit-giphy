@@ -13,10 +13,10 @@ export class LitGiphy extends LitElement {
         justify-content: center;
         align-items: center;
       }
-      .container-search {
-        width: 500px;
-        display: inline-block;
+      .container-cards {
+       max-width: 1200px; 
       }
+      
     `;
   }
 
@@ -32,7 +32,7 @@ export class LitGiphy extends LitElement {
   constructor() {
     super();
     this.showButton = true;
-    this._query = '';
+    this.query = '';
   }
 
   render() {

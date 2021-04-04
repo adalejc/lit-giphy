@@ -8,7 +8,7 @@ export class LitList extends LitElement {
 
     static get properties() {
         return {
-            list: { type: Array, reflect: true  }
+            list: { type: Array }
         };
     }
 
@@ -18,7 +18,11 @@ export class LitList extends LitElement {
     }
 
     static get styles() {
-        return css``;
+        return css`
+        .list-container {
+            margin: 1rem 0;
+        }
+        `;
     }
 
     render() {
