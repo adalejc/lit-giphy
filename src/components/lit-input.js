@@ -34,10 +34,6 @@ export class LitInput extends LitElement {
         this.btnEnabled = false;
     }
 
-    firstUpdated() {
-
-    }
-
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener('keyup', event => { this._keyUpEnter(event) });
@@ -51,8 +47,14 @@ export class LitInput extends LitElement {
     render() {
         return html`
         <div class="lit-input-container">
-            <input name="lit-input" .placeholder="${this.placeholder}" .type="${this.type}" @blur="${this._inputBlur}">
-            <button ?hidden="${!this.btnEnabled}" @click="${this._btnClicked}">${this.btnName}</button>
+            <input name="lit-input" 
+                .placeholder="${this.placeholder}" 
+                .type="${this.type}" 
+                @blur="${this._inputBlur}">
+            <button 
+                ?hidden="${!this.btnEnabled}" 
+                @click="${this._btnClicked}"
+            >${this.btnName}</button>
         </div>
         `;
     }

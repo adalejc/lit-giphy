@@ -1,5 +1,4 @@
 import {html, LitElement} from 'lit-element';
-import './lit-local-storage';
 
 export class LitApiDm extends LitElement {
     static get is() {
@@ -19,10 +18,20 @@ export class LitApiDm extends LitElement {
     constructor() {
         super();
         this.apiKey = 'S2DkVDLQtwGbMYUFs19R9e4IfquN6qOU';
-        this.url = 'https://api.giphy.com/v1/gifs';
+        this.url = 'https://api.giphy.com/v1/gifs/search';
         this.method = 'GET';
-        this.history = JSON.parse(localStorage.getItem('history')) || [];
-        this.result =  JSON.parse(localStorage.getItem('result')) || [];
+        this.history = [];
+        this.result = [];
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('request-api-giphy', event => { this.search(event) });
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener('request-api-giphy', event => { this.search(event) });
     }
 
     render() {
@@ -38,8 +47,18 @@ export class LitApiDm extends LitElement {
         const { data, id } = event;
         if (id === 'history') {
             this.history = data;
+        } else if (id === 'result') {
+            this.result = data;
         }
-        
+    }
+
+    _requestLocalStorage() {
+        this._sendResponse('get-local-storage-giphy', { id: 'history' });
+        this._sendResponse('get-local-storage-giphy', { id: 'result' });
+    }
+
+    _saveLocalStorage(id = '', data = {}) {
+        this._sendResponse('save-local-storage-giphy', {id, data });
     }
 
 
@@ -47,16 +66,24 @@ export class LitApiDm extends LitElement {
      * this function request to api giphy query
      * @param {*} query 
      */
-    search(query = '') {
+    search(event) {
+        //console.log('search', event);
+        let { detail: query } = event;
         query = query.trim().toLocaleLowerCase();
 
         if (!this.history.includes(query)) {
             this.history.unshift(query);
             this.history = this.history.splice(0,10);
-            localStorage.setItem('history', JSON.stringify(this.history));
+            //localStorage.setItem('history', JSON.stringify(this.history));
+            this._saveLocalStorage('history', this.history);
         }
 
-        fetch(this.url, {method: this.method})
+        const myUrl = new URL(this.url);
+        myUrl.searchParams.append('api_key', this.apiKey);
+        myUrl.searchParams.append('limit', 10);
+        myUrl.searchParams.append('q', query);
+
+        fetch(myUrl.href, { method: this.method })
             .then(response => {
                 if (response.ok) return response.json();
                 return Promise.reject(response);
@@ -70,9 +97,11 @@ export class LitApiDm extends LitElement {
      * @param {*} customEvent 
      * @param {*} data 
      */
-    _sendResponse(customEvent = '', data = []) {
+    _sendResponse(customEvent = '', detail) {
+        const { data } = detail;
         if (customEvent && data.length) {
             //localStorage.setItem('result', JSON.stringify(data));
+            //this._saveLocalStorage('result', data);
             this.dispatchEvent(new CustomEvent(customEvent, {
                 detail: data ,
                 bubbles: true,
