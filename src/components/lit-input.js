@@ -78,12 +78,12 @@ export class LitInput extends LitElement {
      */
     _inputBlur() {
         let value = this.shadowRoot.querySelector('input').value;
-
         this.dispatchEvent(new CustomEvent('input-blur-event', {
             bubbles: true,
             composed: true,
             detail: value,
         }));
+        this.shadowRoot.querySelector('input').value = '';
     }
 
     _keyUpEnter(event) {
