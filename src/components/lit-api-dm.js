@@ -1,4 +1,5 @@
 import {html, LitElement} from 'lit-element';
+import './lit-local-storage';
 
 export class LitApiDm extends LitElement {
     static get is() {
@@ -22,6 +23,7 @@ export class LitApiDm extends LitElement {
         this.method = 'GET';
         this.history = [];
         this.result = [];
+        
     }
 
     connectedCallback() {
@@ -38,17 +40,19 @@ export class LitApiDm extends LitElement {
         return html`
             <lit-local-storage 
             id="giphy"
-            @local-storage-get-sucess-giphy="${this._getLocalStorange}"
+            @local-storage-get-sucess="${this._getLocalStorange}"
             ></lit-local-storage>
         `;
     }
 
     _getLocalStorange(event) {
-        const { data, id } = event;
+        const { detail: { data, id } } = event;
         if (id === 'history') {
             this.history = data;
+            this._sendResponse('history-updated', this.history);
         } else if (id === 'result') {
             this.result = data;
+            this._sendResponse('response-giphy', this.result);
         }
     }
 
@@ -67,15 +71,14 @@ export class LitApiDm extends LitElement {
      * @param {*} query 
      */
     search(event) {
-        //console.log('search', event);
         let { detail: query } = event;
         query = query.trim().toLocaleLowerCase();
 
         if (!this.history.includes(query)) {
             this.history.unshift(query);
             this.history = this.history.splice(0,10);
-            //localStorage.setItem('history', JSON.stringify(this.history));
-            this._saveLocalStorage('history', this.history);
+            this._saveLocalStorage('history', {id: 'history', data: this.history});
+            this._sendResponse('history-updated', this.history);
         }
 
         const myUrl = new URL(this.url);
@@ -88,8 +91,24 @@ export class LitApiDm extends LitElement {
                 if (response.ok) return response.json();
                 return Promise.reject(response);
             })
-            .then(data => this._sendResponse('response-giphy', data))
+            .then(data => this.normalize(data))
             .catch(error => console.warn('Something went wront: ', error));
+    }
+
+    normalize(response) {
+        const { data } = response;
+        
+        this.result = data.map(item => {
+            const { title, images: { downsized_medium: { url } } } = item;
+            return {
+                title,
+                url
+            };
+        });
+
+        this._sendResponse('response-giphy', this.result);
+        this._saveLocalStorage('result', { id: 'result', data: this.result });
+        
     }
 
     /**
@@ -98,12 +117,9 @@ export class LitApiDm extends LitElement {
      * @param {*} data 
      */
     _sendResponse(customEvent = '', detail) {
-        const { data } = detail;
-        if (customEvent && data.length) {
-            //localStorage.setItem('result', JSON.stringify(data));
-            //this._saveLocalStorage('result', data);
+        if (customEvent && detail) {
             this.dispatchEvent(new CustomEvent(customEvent, {
-                detail: data ,
+                detail: detail,
                 bubbles: true,
                 composed: true
             }));

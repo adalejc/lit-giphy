@@ -20,6 +20,8 @@ export class LitLocalStorage extends LitElement {
         super.connectedCallback();
         window.addEventListener(`get-local-storage-${this.id}`, event => { this._getDataLocalStorage(event) }); 
         window.addEventListener(`save-local-storage-${this.id}`, event => { this._saveDataLocalStorage(event) });
+        this._getDataLocalStorage('history');
+        this._getDataLocalStorage('result');
     }
 
     disconnectedCallback() {
@@ -28,11 +30,10 @@ export class LitLocalStorage extends LitElement {
         window.removeEventListener(`save-local-storage-${this.id}`, event => { this._saveDataLocalStorage(event) });
     }
 
-    _getDataLocalStorage(event) {
-        const { detail } = event;
-        if (detail.id) {
-            const result = JSON.parse(localStorage.getItem(detail.id));
-            this._genericDispatchEvent(`local-storage-get-sucess-${this.id}`, { id: detail.id, data: result });
+    _getDataLocalStorage(id) {        
+        if (id) {
+            const result = JSON.parse(localStorage.getItem(id));
+            this._genericDispatchEvent(`local-storage-get-sucess`, result);
         }
     }
 

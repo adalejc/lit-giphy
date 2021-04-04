@@ -16,6 +16,9 @@ export class LitGiphy extends LitElement {
       .container-cards {
        max-width: 1200px; 
       }
+      .btn-item {
+        margin: 5px;
+      }
       
     `;
   }
@@ -33,11 +36,15 @@ export class LitGiphy extends LitElement {
     super();
     this.showButton = true;
     this.query = '';
+    this.history = [];
   }
 
   render() {
     return html`
-      <lit-api-dm @response-giphy="${this.requestGiphyItems}"></lit-api-dm>
+      <lit-api-dm 
+        @response-giphy="${this.requestGiphyItems}"
+        @history-updated="${this.setHistory}"
+      ></lit-api-dm>
       <div class="container-main">
         <h2>LitGighy</h2>
         <div class="container-search">
@@ -50,6 +57,7 @@ export class LitGiphy extends LitElement {
             @input-blur-event="${this.setQuery}"
           ></lit-input>
         </div>
+        <div>${this.historyTemplate}</div>
         <div class="container-cards">
           <lit-list .list="${this.result}"></lit-list>
         </div>
@@ -67,6 +75,19 @@ export class LitGiphy extends LitElement {
   requestGiphyItems(event) {
     const { detail } = event;
     this.result = detail;
+  }
+
+  setHistory(event) {
+    const { detail } = event;
+    this.history = detail;
+  }
+
+  get historyTemplate() {
+    return html`
+      ${this.history? 
+      html`${this.history.map(item => html`<button class="btn-item">${item}</button>`)}`
+      :html``}
+    `;
   }
 
   genericDispatchEvent(nameEvent = '', detail = {}) {

@@ -39,7 +39,7 @@ export class LitList extends LitElement {
                 html`${this.list.map(card => html`
                     <lit-card 
                         title="${card.title}" 
-                        img="${card.images.downsized_medium.url}"
+                        img="${card.url}"
                     ></lit-card>
                 `)}`
             :html`<div>Sin datos</div>`}
