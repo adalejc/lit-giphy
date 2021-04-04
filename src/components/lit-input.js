@@ -34,13 +34,67 @@ export class LitInput extends LitElement {
         this.btnEnabled = false;
     }
 
+    firstUpdated() {
+
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('keyup', event => { this._keyUpEnter(event) });
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('keyup', event => { this._keyUpEnter(event) });
+    }
+
     render() {
         return html`
-        <div class="lit-imput-container">
-            <input name="lit-input" .placeholder="${this.placeholder}" .type="${this.type}">
-            <button ?disabled="${this.btnEnabled}">${this.btnName}</button>
+        <div class="lit-input-container">
+            <input name="lit-input" .placeholder="${this.placeholder}" .type="${this.type}" @blur="${this._inputBlur}">
+            <button ?hidden="${!this.btnEnabled}" @click="${this._btnClicked}">${this.btnName}</button>
         </div>
         `;
+    }
+
+    /**
+     * btn-event event fire when user clicked in button search input
+     */
+    _btnClicked() {
+        let value = this.shadowRoot.querySelector('input').value;
+        
+        this.dispatchEvent(new CustomEvent('btn-click-event', {
+            bubbles: true,
+            composed: true,
+            detail: value,
+        }));
+        this.shadowRoot.querySelector('input').value = '';
+    }
+
+    /**
+     * input-blur-event fire when the user leaves input field
+     */
+    _inputBlur() {
+        let value = this.shadowRoot.querySelector('input').value;
+
+        this.dispatchEvent(new CustomEvent('input-blur-event', {
+            bubbles: true,
+            composed: true,
+            detail: value,
+        }));
+    }
+
+    _keyUpEnter(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            let value = this.shadowRoot.querySelector('input').value;
+            
+            this.dispatchEvent(new CustomEvent('input-keyup-event', {
+                bubbles: true,
+                composed: true,
+                detail: value,
+            }));
+        }
     }
 
 

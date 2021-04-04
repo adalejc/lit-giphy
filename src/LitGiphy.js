@@ -5,23 +5,28 @@ export class LitGiphy extends LitElement {
 
   static get styles() {
     return css`
-    :host {
-      display: inline-block;
-    }
-
+      :host {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .container-search {
+        width: 500px;
+        display: inline-block;
+      }
     `;
   }
+
   static get properties() {
     return {
-      btnEnable: { type: Boolean },
+      showButton: { type: Boolean },
     };
   }
 
-
-
   constructor() {
     super();
-    this.btnEnable = true;
+    this.showButton = true;
   }
 
   render() {
@@ -29,10 +34,10 @@ export class LitGiphy extends LitElement {
 
       <div class="container-main">
         <h2>LitGighy</h2>
-        <lit-input type="search" placeholder="buscar gif" btnName="Buscar" ></lit-input>
-        
+        <div class="container-search">
+          <lit-input type="search" placeholder="buscar gif" btnName="Buscar" .btnEnabled="${this.showButton}" ></lit-input>
+        </div>
       </div>
-      
     `;
   }
 }
