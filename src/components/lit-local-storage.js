@@ -18,16 +18,20 @@ export class LitLocalStorage extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        window.addEventListener(`get-local-storage-${this.id}`, event => { this._getDataLocalStorage(event) }); 
+        window.addEventListener(`get-local-storage-${this.id}`, event => { this.requestLocalStorage(event) }); 
         window.addEventListener(`save-local-storage-${this.id}`, event => { this._saveDataLocalStorage(event) });
-        this._getDataLocalStorage('history');
-        this._getDataLocalStorage('result');
     }
 
     disconnectedCallback() {
         super.disconnectedCallback();
         window.removeEventListener(`get-local-storage-${this.id}`, event => { this._getDataLocalStorage(event) });
         window.removeEventListener(`save-local-storage-${this.id}`, event => { this._saveDataLocalStorage(event) });
+    }
+
+    requestLocalStorage(event) {
+        const { detail } = event;
+        this._getDataLocalStorage(detail);
+        this._getDataLocalStorage(detail);
     }
 
     _getDataLocalStorage(id) {        

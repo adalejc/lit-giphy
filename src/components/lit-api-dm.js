@@ -23,12 +23,12 @@ export class LitApiDm extends LitElement {
         this.method = 'GET';
         this.history = [];
         this.result = [];
-        
     }
 
     connectedCallback() {
         super.connectedCallback();
         window.addEventListener('request-api-giphy', event => { this.search(event) });
+        setTimeout(() => { this._requestLocalStorage() }, 500);
     }
 
     disconnectedCallback() {
@@ -57,8 +57,8 @@ export class LitApiDm extends LitElement {
     }
 
     _requestLocalStorage() {
-        this._sendResponse('get-local-storage-giphy', { id: 'history' });
-        this._sendResponse('get-local-storage-giphy', { id: 'result' });
+        this._sendResponse('get-local-storage-giphy', 'history');
+        this._sendResponse('get-local-storage-giphy', 'result');
     }
 
     _saveLocalStorage(id = '', data = {}) {
