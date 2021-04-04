@@ -57,7 +57,9 @@ export class LitGiphy extends LitElement {
             @input-blur-event="${this.setQuery}"
           ></lit-input>
         </div>
-        <div>${this.historyTemplate}</div>
+        <div class="container-search">
+          ${this.historyTemplate}
+        </div>
         <div class="container-cards">
           <lit-list .list="${this.result}"></lit-list>
         </div>
