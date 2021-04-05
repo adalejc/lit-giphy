@@ -90,26 +90,26 @@ export class LitInput extends LitElement {
     /**
      * input-blur-event fire when the user leaves input field
      */
-    _inputBlur(event) {
-        let value = event.srcElement.value
+    _inputBlur() {
+        
         this.dispatchEvent(new CustomEvent('input-blur-event', {
             bubbles: true,
             composed: true,
-            detail: value,
+            detail: this.value,
         }));
-        event.srcElement.value = '';
+        this.value = '';
     }
 
     _keyUpEnter(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
-            let value = this.shadowRoot.querySelector('input').value;
             
             this.dispatchEvent(new CustomEvent('input-keyup-event', {
                 bubbles: true,
                 composed: true,
-                detail: value,
+                detail: this.value,
             }));
+            this.value = '';
         }
     }
 

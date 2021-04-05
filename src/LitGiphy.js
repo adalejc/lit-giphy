@@ -61,6 +61,7 @@ export class LitGiphy extends LitElement {
             .btnEnabled="${this.showButton}"
             @btn-click-event="${this.setQuery}"
             @input-blur-event="${this.setQuery}"
+            @input-keyup-event="${this.setQuery}"
           ></lit-input>
         </div>
         <div class="text-center m-2">
