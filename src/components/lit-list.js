@@ -41,7 +41,7 @@ export class LitList extends LitElement {
         return html`
             ${this.list? 
                 html`${this.list.map(card => html`
-                    <lit-card class="col-xs-12 col-sm-6 col-md-4" 
+                    <lit-card class="col-xs-12 col-sm-6 col-md-4 col-lg-3" 
                         title="${card.title}" 
                         img="${card.url}"
                     ></lit-card>
