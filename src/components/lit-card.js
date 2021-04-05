@@ -31,7 +31,12 @@ export class LitCard extends LitElement {
             <div class="card-container">
                 <!-- <div class="card-title">${this.title}</div> -->
                 <div class="card-image">
-                    <img src="${this.img}" alt="${this.title}" width="100%">
+                    <img 
+                        src="${this.img}" 
+                        alt="${this.title}" 
+                        width="100%"
+                        loading="lazy"
+                    >
                 </div>
             </div>
         `;

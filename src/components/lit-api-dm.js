@@ -40,20 +40,22 @@ export class LitApiDm extends LitElement {
         return html`
             <lit-local-storage 
             id="giphy"
-            @local-storage-get-sucess="${this._getLocalStorange}"
+            @local-storage-get-sucess-result="${this._getLocalStorageResult}"
+            @local-storage-get-sucess-history="${this._getLocalStorageHistory}"
             ></lit-local-storage>
         `;
     }
 
-    _getLocalStorange(event) {
-        const { detail: { data, id } } = event;
-        if (id === 'history') {
-            this.history = data;
-            this._sendResponse('history-updated', this.history);
-        } else if (id === 'result') {
-            this.result = data;
-            this._sendResponse('response-giphy', this.result);
-        }
+    _getLocalStorageResult(event) {
+        const { detail } = event;
+        this.result = detail;
+        this._sendResponse('response-giphy', this.result);
+    }
+
+    _getLocalStorageHistory(event) {
+        const { detail } = event;
+        this.history = detail;
+        this._sendResponse('history-updated', this.history);
     }
 
     _requestLocalStorage() {
@@ -64,7 +66,6 @@ export class LitApiDm extends LitElement {
     _saveLocalStorage(id = '', data = {}) {
         this._sendResponse('save-local-storage-giphy', {id, data });
     }
-
 
     /**
      * this function request to api giphy query
@@ -77,7 +78,7 @@ export class LitApiDm extends LitElement {
         if (!this.history.includes(query)) {
             this.history.unshift(query);
             this.history = this.history.splice(0,10);
-            this._saveLocalStorage('history', {id: 'history', data: this.history});
+            this._saveLocalStorage('history', this.history);
             this._sendResponse('history-updated', this.history);
         }
 
@@ -107,7 +108,7 @@ export class LitApiDm extends LitElement {
         });
 
         this._sendResponse('response-giphy', this.result);
-        this._saveLocalStorage('result', { id: 'result', data: this.result });
+        this._saveLocalStorage('result', this.result);
         
     }
 
