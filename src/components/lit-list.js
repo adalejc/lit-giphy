@@ -6,6 +6,10 @@ export class LitList extends LitElement {
         return 'lit-list';
     }
 
+    createRenderRoot() {
+        return this;
+    }
+
     static get properties() {
         return {
             list: { type: Array }
@@ -27,7 +31,7 @@ export class LitList extends LitElement {
 
     render() {
         return html`
-            <div class="list-container">
+            <div class="row align-items-center ">
                 ${this.listTemplate}
             </div>
         `;
@@ -37,7 +41,7 @@ export class LitList extends LitElement {
         return html`
             ${this.list? 
                 html`${this.list.map(card => html`
-                    <lit-card 
+                    <lit-card class="col-xs-12 col-sm-6 col-md-4" 
                         title="${card.title}" 
                         img="${card.url}"
                     ></lit-card>

@@ -5,6 +5,10 @@ export class LitCard extends LitElement {
         return 'lit-card';
     }
 
+    createRenderRoot() {
+        return this;
+    }
+
     static get properties() {
         return {
             title: { type: String },
@@ -28,10 +32,11 @@ export class LitCard extends LitElement {
 
     render() {
         return html`
-            <div class="card-container">
+            <div class="card">
                 <!-- <div class="card-title">${this.title}</div> -->
-                <div class="card-image">
+                <div class="card-img-top">
                     <img 
+                        class="img-fluid"
                         src="${this.img}" 
                         alt="${this.title}" 
                         width="100%"

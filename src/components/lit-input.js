@@ -5,6 +5,10 @@ export class LitInput extends LitElement {
         return 'lit-input';
     }
 
+    createRenderRoot() {
+        return this;
+    }
+
     static get styles() {
         return css`
             :host {
@@ -23,6 +27,7 @@ export class LitInput extends LitElement {
             placeholder: { type: String },
             btnName: { type: String },
             btnEnabled: { type: Boolean },
+            value: { type: String },
         };
     }
 
@@ -32,6 +37,7 @@ export class LitInput extends LitElement {
         this.placeholder = '';
         this.btnName = '';
         this.btnEnabled = false;
+        this.value = '';
     }
 
     connectedCallback() {
@@ -46,12 +52,16 @@ export class LitInput extends LitElement {
 
     render() {
         return html`
-        <div class="lit-input-container">
+        <div class="input-group mb-3">
             <input name="lit-input" 
-                .placeholder="${this.placeholder}" 
-                .type="${this.type}" 
-                @blur="${this._inputBlur}">
+                class="form-control"
+                .placeholder="${this.placeholder}"
+                .value="${this.value}"
+                @change="${this._inputChanged}"
+            >
             <button 
+                class="btn btn-outline-secondary"
+                type="button"
                 ?hidden="${!this.btnEnabled}" 
                 @click="${this._btnClicked}"
             >${this.btnName}</button>
@@ -63,27 +73,31 @@ export class LitInput extends LitElement {
      * btn-event event fire when user clicked in button search input
      */
     _btnClicked() {
-        let value = this.shadowRoot.querySelector('input').value;
+        if (!this.value) return;
         
         this.dispatchEvent(new CustomEvent('btn-click-event', {
             bubbles: true,
             composed: true,
-            detail: value,
+            detail: this.value,
         }));
-        this.shadowRoot.querySelector('input').value = '';
+        this.value = '';  
+    }
+
+    _inputChanged(event) {
+        this.value = event.target.value;
     }
 
     /**
      * input-blur-event fire when the user leaves input field
      */
-    _inputBlur() {
-        let value = this.shadowRoot.querySelector('input').value;
+    _inputBlur(event) {
+        let value = event.srcElement.value
         this.dispatchEvent(new CustomEvent('input-blur-event', {
             bubbles: true,
             composed: true,
             detail: value,
         }));
-        this.shadowRoot.querySelector('input').value = '';
+        event.srcElement.value = '';
     }
 
     _keyUpEnter(event) {

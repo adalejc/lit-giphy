@@ -23,6 +23,10 @@ export class LitGiphy extends LitElement {
     `;
   }
 
+  createRenderRoot() {
+    return this;
+  }
+
   static get properties() {
     return {
       showButton: { type: Boolean },
@@ -45,9 +49,11 @@ export class LitGiphy extends LitElement {
         @response-giphy="${this.requestGiphyItems}"
         @history-updated="${this.setHistory}"
       ></lit-api-dm>
-      <div class="container-main">
-        <h2>LitGighy</h2>
-        <div class="container-search">
+      <div class="container">
+        <div class="text-center m-3">
+          <h2>LitGighy</h2>
+        </div>
+        <div class="text-center">
           <lit-input 
             type="search" 
             placeholder="buscar gif" 
@@ -57,7 +63,7 @@ export class LitGiphy extends LitElement {
             @input-blur-event="${this.setQuery}"
           ></lit-input>
         </div>
-        <div class="container-search">
+        <div class="text-center m-2">
           ${this.historyTemplate}
         </div>
         <div class="container-cards">
@@ -89,7 +95,7 @@ export class LitGiphy extends LitElement {
       ${this.history? 
       html`${this.history.map(item => html`
         <button 
-          class="btn-item" 
+          type="button" class="btn btn-secondary"
           @click="${() => { this.setQuery({detail: item}) }}"
         >${item}</button>`)}`
       :html``}
@@ -97,7 +103,7 @@ export class LitGiphy extends LitElement {
   }
 
   genericDispatchEvent(nameEvent = '', detail = {}) {
-    if (nameEvent && Object.entries(detail).length) {
+    if (!!nameEvent && !!detail) {
       this.dispatchEvent(new CustomEvent(nameEvent, {
         bubbles: true,
         composed: true,
