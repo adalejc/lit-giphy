@@ -96,7 +96,7 @@ export class LitGiphy extends LitElement {
       ${this.history? 
       html`${this.history.map(item => html`
         <button 
-          type="button" class="btn btn-light"
+          type="button" class="btn btn-light m-1"
           @click="${() => { this.setQuery({detail: item}) }}"
         >${item}</button>`)}`
       :html``}
