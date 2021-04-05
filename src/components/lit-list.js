@@ -46,7 +46,7 @@ export class LitList extends LitElement {
                         img="${card.url}"
                     ></lit-card>
                 `)}`
-            :html`<div>Sin datos</div>`}
+            :html`<div class="text-center">Sin busquedas</div>`}
         `;
     }
 }
