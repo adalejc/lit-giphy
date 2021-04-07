@@ -57,7 +57,7 @@ export class LitGiphy extends LitElement {
           <lit-input 
             type="search" 
             placeholder="buscar gif" 
-            btnName="Buscar" 
+            button-text="Buscar"
             .btnEnabled="${this.showButton}"
             @btn-click-event="${this.setQuery}"
             @input-blur-event="${this.setQuery}"

@@ -25,7 +25,7 @@ export class LitInput extends LitElement {
         return {
             type: { type: String },
             placeholder: { type: String },
-            btnName: { type: String },
+            btnName: { type: String, attribute: 'button-text' },
             btnEnabled: { type: Boolean },
             value: { type: String },
         };
